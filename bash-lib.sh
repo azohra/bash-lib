@@ -32,7 +32,7 @@ run_task () {
 }
 
 ask_permission () {  
-    announce "${1}" "${2}"
+    announce "${1}" 0
     printf " ${C_REG}(y/n): "
     while true
     do
@@ -62,7 +62,10 @@ announce () {
 }
 
 check_deps () { #this command expects an associative array of binary_name: brew package
-	local __deps="${1}"
+# Example:
+# $ declare -A deps=( ["gcloud"]="google-cloud-sdk" )
+# $ check_deps "$(declare -p deps)"
+	eval "declare -A __deps=${1#*=}"
 	local __resp
 	for dep in "${!__deps[@]}"; do
 		command -v "${dep}" &> /dev/null
