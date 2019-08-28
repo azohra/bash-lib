@@ -91,3 +91,20 @@ install_dep() {
         exit 1
     fi
 }
+    
+keychain_del () {
+    local __account=${1}; local __service=${2}
+    security delete-generic-password -a "${__account}" -s "${__service}" > /dev/null 2>&1
+}
+
+keychain_get () {
+    local __account=${1}; local __service=${2}
+    security find-generic-password -a "${__account}" -s "${__service}" -w 2> /dev/null
+}
+
+keychain_set () {
+    local __account=${1}; local __service=${2}; local __value=${3};
+    keychain_del "${__account}" "${__service}" || true
+    sleep 0.5
+    security add-generic-password -a "${__account}" -s "${__service}" -w "${__value}" #> /dev/null 2>&1
+}
